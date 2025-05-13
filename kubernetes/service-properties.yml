@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-properties
+  namespace: questions
+data:
+  integration-service.yml: |+
+    spring:
+      application:
+        name: integration-service
+      grpc.client:
+        channels:
+          question.address: product-service:8081
+      graphql:
+        path: /data
+        graphiql.enabled: true
+
+    server.port: 8081
+
+  product-service.yml: |+
+    spring:
+      application:
+        name: product-service
+      grpc.server:
+        port: 8081
+        host: integration-service
+      datasource:
+        url: jdbc:postgresql://postgres:5432/questions-db
+        password: password
+        username: username
+        driver-class-name: org.postgresql.Driver
+      jpa:
+        hibernate:
+          ddl-auto: create
+        database: postgresql
+        show-sql: false
+        properties:
+          hibernate:
+            format_sql: false

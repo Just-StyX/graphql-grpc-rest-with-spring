@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: integration-service
+  grpc.client:
+    channels:
+      question.address: product-service:8081
+  graphql:
+    path: /data
+    graphiql.enabled: true
+
+server.port: 8081

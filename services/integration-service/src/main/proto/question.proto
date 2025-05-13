@@ -1,0 +1,21 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+package jsl.group.question;
+
+message QuestionId {
+    string value = 1;
+}
+
+message Question {
+    QuestionId id = 1;
+    string question = 2;
+    string choices = 3;
+    string answer = 4;
+}
+
+service QuestionService {
+    rpc AddQuestion(Question) returns (QuestionId);
+    rpc GetQuestionById(QuestionId) returns (Question);
+    rpc GetQuestions(google.protobuf.Int32Value) returns (stream Question);
+}

@@ -1,0 +1,22 @@
+type Question {
+    questionId: String
+    question: String
+    choices: String
+    answer: String
+}
+
+input InputQuestion {
+    questionId: String
+    question: String
+    choices: String
+    answer: String
+}
+
+type Mutation {
+    createQuestion(inputQuestion: InputQuestion!): Question
+}
+
+type Query {
+    question(questionId: String): Question
+    questions(limit: Int): [Question]
+}

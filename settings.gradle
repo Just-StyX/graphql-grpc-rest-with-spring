@@ -1,0 +1,5 @@
+include ':services:product-service'
+include ':services:inventory-service'
+include ':services:order-service'
+include ':services:integration-service'
+include ':commons:utilities'
