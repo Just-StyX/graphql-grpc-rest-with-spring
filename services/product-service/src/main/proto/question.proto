@@ -18,4 +18,5 @@ service QuestionService {
     rpc AddQuestion(Question) returns (QuestionId);
     rpc GetQuestionById(QuestionId) returns (Question);
     rpc GetQuestions(google.protobuf.Int32Value) returns (stream Question);
+    rpc GetQuestionByProductId(google.protobuf.Int32Value) returns (stream Question);
 }

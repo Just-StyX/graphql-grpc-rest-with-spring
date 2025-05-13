@@ -20,3 +20,24 @@ type Query {
     question(questionId: String): Question
     questions(limit: Int): [Question]
 }
+
+type PageInfo {
+    startCursor: String
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type QuestionEdge {
+    cursor: String!
+    node: Question!
+}
+
+type QuestionConnection {
+    edges: [QuestionEdge]
+    pageInfo: PageInfo
+}
+
+type QuestionPages {
+    pages(first: Int, after: String, last: Int, before: String): QuestionConnection
+}

@@ -67,7 +67,7 @@ public class QuestionEntity {
     @Override
     public String toString() {
         return "QuestionEntity{" +
-                "id='" + id + '\'' +
+                "productId='" + id + '\'' +
                 ", version=" + version +
                 ", question='" + question + '\'' +
                 ", choices='" + choices + '\'' +

@@ -2,10 +2,14 @@ package jsl.group.microservices.integration.rest;
 
 import jsl.group.microservices.integration.models.*;
 import jsl.group.microservices.integration.service.QuestionService;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.graphql.data.query.ScrollSubrange;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -46,7 +50,7 @@ public class ClientController {
     }
 
     @GetMapping
-    public Mono<List<ClientQuestion>> clientQuestionFlux(@RequestParam(value = "limit", defaultValue = "1") int limit) {
+    public Mono<List<ClientQuestion>> clientQuestionFlux(@RequestParam(value = "limit", defaultValue = "5") int limit) {
         String document = """
                 query questions($limit: Int) {
                   questions(limit: $limit) {
@@ -64,6 +68,19 @@ public class ClientController {
         Question question = new Question(inputQuestion.questionId(), inputQuestion.question(), inputQuestion.choices(), inputQuestion.answer());
         String questionId = questionService.addQuestion(question);
         return Mono.just(new Question(questionId, inputQuestion.question(), inputQuestion.choices(), inputQuestion.answer()));
+    }
+
+    @SchemaMapping
+    Flux<ClientQuestion> pages(ScrollSubrange scrollSubrange) {
+        MutableSortDefinition mutableSortDefinition = new MutableSortDefinition();
+        mutableSortDefinition.setProperty("question");
+        mutableSortDefinition.setAscending(true);
+        List<Question> questionList = (List<Question>) questionService.getQuestions(5);
+        PagedListHolder<Question> pagedListHolder = new PagedListHolder<>(questionList, mutableSortDefinition);
+        pagedListHolder.setPageSize(1);
+        pagedListHolder.setPage((int) scrollSubrange.position().stream().count());
+        List<ClientQuestion> clientQuestion = pagedListHolder.getPageList().stream().map(this::questionToClientQuestion).toList();
+        return Flux.fromIterable(clientQuestion);
     }
 
     @QueryMapping

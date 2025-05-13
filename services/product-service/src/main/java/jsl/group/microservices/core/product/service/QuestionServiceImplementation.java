@@ -61,4 +61,9 @@ public class QuestionServiceImplementation extends QuestionServiceGrpc.QuestionS
         }
         questionStreamObserver.onCompleted();
     }
+
+    @Override
+    public void getQuestionByProductId(Int32Value numberOfQuestions, StreamObserver<QuestionOuterClass.Question> questionStreamObserver) {
+
+    }
 }
